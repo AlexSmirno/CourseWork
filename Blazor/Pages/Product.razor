@@ -1,0 +1,40 @@
+﻿@page "/Product/{ProductId}"
+@using Blazor.Services
+
+<h3>Информация о продукте</h3>
+
+@if (CurrentProduct != null)
+{
+    <div class="authorBlock">
+        <div class="field">
+            <label class="label">Идентификатор</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Id" aria-label="Disabled input example" disabled readonly>
+        </div>
+        <div class="field">
+            <label class="label">Размер</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Size" aria-label="Disabled input example" disabled readonly>
+        </div>
+        <div class="field">
+            <label class="label">Brand</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Brand" aria-label="Disabled input example" disabled readonly>
+        </div>
+        <div class="field">
+            <label class="label">Цвет</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Color" aria-label="Disabled input example" disabled readonly>
+        </div>
+        <div class="field">
+            <label class="label">Количество</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Number" aria-label="Disabled input example" disabled readonly>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public string ProductId { get; set; }
+    public List<Data.Models.Product> Products { get; set; }
+    public Data.Models.Product? CurrentProduct { get; set; }
+    [Inject]
+    private IProductProvider productProvider { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        CurrentProduct = await productProvider.GetOne(Int32.Parse(ProductId));
+        Products = await productProvider.GetAll();
+        Console.WriteLine(CurrentProduct);
+        base.OnInitialized();
+    }
+}
