@@ -6,7 +6,7 @@ namespace Blazor.Services
 {
     public class ClientProvider : IClientProvider
     {
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
         public ClientProvider(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -14,18 +14,18 @@ namespace Blazor.Services
 
         public async Task<List<Client>?> GetAll()
         {
-            return await _httpClient.GetFromJsonAsync<List<Client>>("https://localhost:7053/api/Client");
-            //return await _httpClient.GetFromJsonAsync<List<Client>>("/api/Client");
+            //return await _httpClient.GetFromJsonAsync<List<Client>>("https://localhost:7053/api/Client");
+            return await _httpClient.GetFromJsonAsync<List<Client>>("/api/Client");
         }
 
         public async Task<Client?> GetOne(int id)
         {
-            return await _httpClient.GetFromJsonAsync<Client>($"https://localhost:7053/api/Client/{id}");
+            return await _httpClient.GetFromJsonAsync<Client>($"/api/Client/{id}");
         }
 
-        public async Task<bool> Add(Client product)
+        public async Task<bool> Add(Client client)
         {
-            string data = JsonConvert.SerializeObject(product);
+            string data = JsonConvert.SerializeObject(client);
             StringContent httpContent = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
 
             var responce = await _httpClient.PostAsync("/api/Client", httpContent);
@@ -42,6 +42,7 @@ namespace Blazor.Services
             Client? editClient = JsonConvert.DeserializeObject<Client>(responce.Content.ReadAsStringAsync().Result);
             return await Task.FromResult(editClient);
         }
+
         public async Task<bool> Remove(int id)
         {
             var delete = await _httpClient.DeleteAsync($"/api/Client/{id}");

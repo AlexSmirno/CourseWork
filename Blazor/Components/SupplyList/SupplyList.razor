@@ -1,0 +1,79 @@
+﻿@using Blazor.Data.Models
+@using Blazor.Services
+@inject NavigationManager _navigationManager
+
+<div class="container-fluid mr-3">
+	<div class="row">
+		<div class="col-8 offset-2 text-center">
+			<h3>ProductsList</h3>
+
+			<table class="table table-my-style my-3 mx-auto" id="supplies-table">
+				<thead class="thead-my-style">
+					<tr>
+						<th class="py-auto" scope="row">#</th>
+						<td class="py-2 pr-1" colspan="4">
+							<div class="row mr-2">
+								<div class="col-4 px-1 align-middle my-auto">
+									<p class="my-auto">Поставщик</p>
+								</div>
+								<div class="col-2 px-1 my-auto">
+									<p class="my-auto">Количество</p>
+								</div>
+								<div class="col-3 px-1 my-auto"> 
+									<p class="my-auto">Время</p>
+								</div>
+								<div class="col-2 px-1 my-auto">
+									<p class="my-auto">Тип</p>
+		    				</div>
+							</div>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+				@if (supplies != null)
+				{
+				   @foreach (var supply in supplies)
+					{
+						<tr @onclick="()=>toItem(supply)">
+							<th class="py-auto" scope="row">@supply.Id</th>
+							<td class="py-2 pr-1" colspan="4">
+								<div class="row mr-2">
+									<div class="col-4 px-1 align-middle my-auto">
+										<p class="my-auto">@supply.Supplier.CompanyName</p>
+									</div>
+									<div class="col-2 px-1 my-auto">
+										<p class="my-auto">@supply.Division</p>
+									</div>
+									<div class="col-3 px-1 my-auto">
+										<p class="my-auto">@supply.Date</p>
+									</div>
+									<div class="col-2 px-1 my-auto">
+										<p class="my-auto">@supply.Type</p>
+									</div>
+								</div>
+							</td>
+						</tr>
+					}
+				}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+@code {
+    private List<Supply>? supplies;
+
+    [Inject]
+    private ISupplyProvider supplyProvider{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        supplies = await supplyProvider.GetAll();
+    }
+
+    public void toItem(Supply supply)
+    {
+        _navigationManager.NavigateTo($"/Supply/{supply.Id}");
+    }
+}

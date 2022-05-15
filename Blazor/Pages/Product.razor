@@ -5,22 +5,28 @@
 
 @if (CurrentProduct != null)
 {
-    <div class="authorBlock">
-        <div class="field">
-            <label class="label">Идентификатор</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Id" aria-label="Disabled input example" disabled readonly>
-        </div>
-        <div class="field">
-            <label class="label">Размер</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Size" aria-label="Disabled input example" disabled readonly>
-        </div>
-        <div class="field">
-            <label class="label">Brand</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Brand" aria-label="Disabled input example" disabled readonly>
-        </div>
-        <div class="field">
-            <label class="label">Цвет</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Color" aria-label="Disabled input example" disabled readonly>
-        </div>
-        <div class="field">
-            <label class="label">Количество</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Number" aria-label="Disabled input example" disabled readonly>
-        </div>
+    <div class="container-fluid mr-md-3"> 
+        <div class="row">
+            <div class="col-8 offset-2 text-center">
+                <div class="authorBlock">
+                   <div class="field">
+                       <label class="label">Идентификатор</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Id" aria-label="Disabled input example" disabled readonly>
+                  </div>
+                  <div class="field">
+                    <label class="label">Размер</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Size" aria-label="Disabled input example" disabled readonly>
+                  </div>
+                  <div class="field">
+                    <label class="label">Brand</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Brand" aria-label="Disabled input example" disabled readonly>
+                  </div>
+                  <div class="field">
+                    <label class="label">Цвет</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Color" aria-label="Disabled input example" disabled readonly>
+                 </div>
+                 <div class="field">
+                    <label class="label">Количество</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Number" aria-label="Disabled input example" disabled readonly>
+                 </div>
+               </div>
+           </div>
+       </div>
     </div>
 }
 @code {
