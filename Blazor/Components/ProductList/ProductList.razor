@@ -1,54 +1,198 @@
 ﻿@using Blazor.Data.Models
 @using Blazor.Services
 @inject NavigationManager _navigationManager
+<div class="conteiter-fluid mr-3">
+    <div class="row">
+        <!------------------------------ left panel   --------------------------------------------------->
+        <div class="col-2">
+            <nav class="navbar my-4 mx-2 bg-my-style border rounded">
+                <!-- Left panel -->
+                <ul class="navbar-nav"
+                    <li class="nav-item mx-2 my-1">
+                        <label class="btn btn-bg">
+                            <input type="radio" name="options" id="option1" checked> по дате поставки
+                        </label>
+                    </li>
+                    <li class="nav-item mx-2 my-1">
+                        <label class="btn btn-bg">
+                            <input type="radio" name="options" id="option2"> по поставщикам
+                        </label>
+                    </li>
+                    <li class="nav-item mx-2 my-1">
+                        <label class="btn btn-bg">
+                            <input type="radio" name="options" id="option3"> по количеству
+                        </label>
+                    </li>
+                </ul>
+            </nav>
+            <nav class="navbar my-4 mx-2 bg-my-style border rounded">
+                <h4 class="mx-auto">Поставщики</h4>
+                <!-- Links -->
+                <ul class="navbar-nav">
+                    @foreach (var item in Products.Select(pr => pr.SupplierCompany).Distinct().ToList())
+                    {
+                        <li class="nav-item mx-2 my-1">
+                            <label class="btn btn-bg">
+                                <input type="checkbox" name="options" id="option1"
+                                   @onchange="eventArgs => {CheckboxSupplierClicked(item, eventArgs.Value);}" checked> <text>@item</text>
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </nav>
 
-<h3>ProductsList</h3>
-
-<table class="table">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>ProductName</th>
-        <th>Бренд</th>
-        <th>Цена</th>
-        <th>Дата поставки</th>
-        <th>Размер</th>
-        <th>Цвет</th>
-        <th>Количество</th>
-        <th>ID поставки</th>
-    </tr>
-    </thead>
-    <tbody>
-    @if (products != null)
-    {
-       @foreach (var product in products)
+            <nav class="navbar my-4 mx-2 bg-my-style border rounded">
+                <h4 class="mx-auto">Клиенты</h4>
+                <!-- Links -->
+                <ul class="navbar-nav">
+                    @foreach (var item in Products.Select(pr => pr.ClientCompany).Distinct().ToList())
+                    {
+                        <li class="nav-item mx-2 my-1">
+                            <label class="btn btn-bg">
+                                <input type="checkbox" name="options" id="option1"
+                                   @onchange="eventArgs => {CheckboxClientClicked(item, eventArgs.Value);}" checked> <text>@item</text>
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+        <!------------------------------ main information   --------------------------------------------------->
+        @if (products != null)
         {
-            <tr @onclick="()=>toItem(product)">
-                <td>@product.Id</td>
-                <td>@product.ProductName</td>
-                <td>@product.Brand</td>
-                <td>@product.Price</td>
-                <td>@product.Date</td>
-                <td>@product.Size</td>
-                <td>@product.Color</td>
-                <td>@product.Number</td>
-                <td>@product.SupplyId</td>
-            </tr>
+            <div class="col-8 mt-4">
+                <form class="form-row my-2text-align">
+                    <div class="col-11 form-group">
+                        <input type="text" class="form-control mr-3" id="Input" aria-describedby="emailHelp" placeholder="Что хотите найти?">
+                    </div>
+                    <div class="col-1 text-center mt-2">
+                        <button class="btn btn-bg m-2 my-sm-0" type="submit">Поиск</button>
+                    </div>
+                </form>
+                <table class="table table-my-style my-3">
+                    <thead class="thead-my-style">
+                        <tr>
+                            <th scope="col">#</th>
+                            <td class="py-2 pr-1" colspan="4">
+                                <div class="row mr-2">
+                                    <div class="col-2 px-1 my-auto">
+                                        <p class="my-auto">Товар</p>
+                                    </div>
+                                    <div class="col-2 px-1 my-auto">
+                                        <p class="my-auto">Количество на складе</p>
+                                    </div>
+                                    <div class="col-3 px-1 my-auto">
+                                        <p class="my-auto">Поставщик</p>
+                                    </div>
+                                    <div class="col-3 px-1 my-auto">
+                                        <p class="my-auto">Клиент</p>
+                                    </div>
+                                    <div class="col-2 px-1 my-auto">
+                                        <p class="my-auto">Дата поставки</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in products)
+                        {
+                            <tr @onclick="() => toItem(item.Id)">
+                                <th scope="row">@item.Id</th>
+                                <td class="py-2 pr-1" colspan="4">
+                                    <div class="row mr-2">
+                                        <div class="col-2 px-1 my-auto">
+                                            <p class="my-auto">@item.ProductName</p>
+                                        </div>
+                                        <div class="col-2 px-1 my-auto">
+                                            <p class="my-auto">@item.Number</p>
+                                        </div>
+                                        <div class="col-3 px-1 my-auto">
+                                            <p class="my-auto">@item.SupplierCompany</p>
+                                        </div>
+                                        <div class="col-3 px-1 my-auto">
+                                            <p class="my-auto">@item.ClientCompany</p>
+                                        </div>
+                                        <div class="col-2 px-1 my-auto">
+                                            <p class="my-auto">@item.Date</p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
         }
-    }
-    </tbody>
-</table>
+        else
+        {
+            <h1>Loading...</h1>
+        }
+        <!------------------------------ right panel   --------------------------------------------------->
+        <div class="col-2">
+        </div>
+    </div>
+</div>
 @code {
-    private List<Product>? products;
+    private List<ProductDTO>? Products;
     [Inject]
-    private IProductProvider productProvider{ get; set; }
+    private IProductProvider productProvider { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        products = await productProvider.GetAll();
+        Products = await productProvider.GetAllDTO();
+        products = Products;
+        chosenClients = Products.Select(pr => pr.ClientCompany).Distinct().ToList();
+        chosenSuppliers = Products.Select(pr => pr.SupplierCompany).Distinct().ToList();
     }
-    public void toItem(Product product)
+    public void toItem(int productId)
     {
-        _navigationManager.NavigateTo($"/Product/{product.Id}");
+        _navigationManager.NavigateTo($"/Product/{productId}");
     }
 
+    private List<ProductDTO> products = new List<ProductDTO>();
+
+    //Поставщики
+    private List<string> chosenSuppliers = new List<string>();
+    void CheckboxSupplierClicked(string supplier, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!chosenSuppliers.Contains(supplier))
+            {
+                chosenSuppliers.Add(supplier);
+            }
+        }
+        else
+        {
+            if (chosenSuppliers.Contains(supplier))
+            {
+                chosenSuppliers.Remove(supplier);
+            }
+        }
+
+        products = Products.Where(pr => chosenSuppliers.Contains(pr.SupplierCompany) && chosenClients.Contains(pr.ClientCompany)).ToList();
+    }
+
+    //Клиенты
+    private List<string> chosenClients = new List<string>();
+    void CheckboxClientClicked(string client, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!chosenClients.Contains(client))
+            {
+                chosenClients.Add(client);
+            }
+        }
+        else
+        {
+            if (chosenClients.Contains(client))
+            {
+                chosenClients.Remove(client);
+            }
+        }
+
+        products = Products.Where(pr => chosenClients.Contains(pr.ClientCompany) && chosenSuppliers.Contains(pr.SupplierCompany)).ToList();
+    }
 }

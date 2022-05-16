@@ -1,6 +1,7 @@
 ﻿using WebServer.Data.Models;
 using WebServer.Data.DTO;
 using WebServer.Data.Repositories;
+using System.Collections.Generic;
 
 namespace WebServer.Data.Services
 {
@@ -53,6 +54,38 @@ namespace WebServer.Data.Services
 
             }
 
+            return null;
+        }
+
+        public async Task<List<ProductDTO>?> GetAllProductDTO()
+        {
+            var products = await _productRepository.GetAllProductAsync();
+
+            if (products.Any())
+            {
+                List<ProductDTO> productDTOs = new List<ProductDTO>();
+                foreach (var item in products)
+                {
+                    ProductDTO productDTO = new ProductDTO()
+                    {
+                        Id = item.Id,
+                        Size = item.Size,
+                        Brand = item.Brand,
+                        Color = item.Color,
+                        Date = item.Date,
+                        Number = item.Number,
+                        Price = item.Price,
+                        ProductName = item.ProductName,
+                        SupplyId = item.SupplyId
+                    };
+                    
+                    productDTO.ClientCompany = await _productRepository.GetClientCompanyByIdProduct(item.SupplyId);
+                    productDTO.SupplierCompany = await _productRepository.GetSupplierCompanyByIdProduct(item.SupplyId);
+                    productDTOs.Add(productDTO);
+                }
+
+                return await Task.FromResult(productDTOs);
+            }
             return null;
         }
 

@@ -49,6 +49,19 @@ namespace WebServer.Controllers
             return product;
         }
 
+        [HttpGet("DTO")]
+        public async Task<ActionResult<List<ProductDTO>>> GetAllProductDTO()
+        {
+            var product = await _context.GetAllProductDTO();
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return product;
+        }
+
         [HttpPut]
         public async Task<ActionResult<Product>> PutProducts([FromBody] ProductDTO product)
         {
