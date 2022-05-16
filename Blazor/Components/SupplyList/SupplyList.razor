@@ -62,18 +62,19 @@
 </div>
 
 @code {
-    private List<Supply>? supplies;
+	private List<Supply>? supplies;
 
-    [Inject]
-    private ISupplyProvider supplyProvider{ get; set; }
+	[Inject]
+	private ISupplyProvider supplyProvider{ get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        supplies = await supplyProvider.GetAll();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		supplies = await supplyProvider.GetAll();
+	}
 
-    public void toItem(Supply supply)
-    {
-        _navigationManager.NavigateTo($"/Supply/{supply.Id}");
-    }
+	public void toItem(Supply supply)
+	{
+		_navigationManager.NavigateTo($"/Supply/{supply.Id}");
+	}
+
 }

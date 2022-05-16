@@ -15,4 +15,4 @@ builder.Services.AddScoped<IClientProvider, ClientProvider>();
 builder.Services.AddScoped<ISupplyProvider, SupplyProvider>();
 builder.Services.AddScoped<ISupplierProvider, SupplierProvider>();
 
-await builder.Build().RunAsync();   
+await builder.Build().RunAsync();
