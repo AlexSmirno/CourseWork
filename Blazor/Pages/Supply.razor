@@ -15,7 +15,7 @@
                             @foreach(var item in sortParams)
                             {
                                 <label class="btn btn-bg" @onclick="() => Refresh(item)">
-                                    <input type="radio" name="question1" /> по размеру
+                                    <input type="radio" name="question1" /> @item
                                 </label>
                             }
                         </li>
@@ -100,7 +100,6 @@ else
     public Data.Models.Supply? CurrentSupply { get; set; }
 
     public string Header { get; set; }
-    public bool SortParametr { get; set; }
 
     [Inject]
     private ISupplyProvider supplyProvider { get; set; }
@@ -108,6 +107,7 @@ else
     protected async override Task OnInitializedAsync()
     {
         CurrentSupply = await supplyProvider.GetOne(Int32.Parse(SupplyId));
+
         Header = "Поставка от " + CurrentSupply.Supplier.CompanyName + " от " + CurrentSupply.Date;
         products = CurrentSupply.Products.ToList();
         chosenSizes = CurrentSupply.Products.Select(pr => pr.Size).Distinct().ToList();
@@ -117,15 +117,15 @@ else
     }
 
     // Сортировка
-    private async Task Refresh(int number)
+    private async Task Refresh(string param)
     {
-        if(number == 1)
+        if(param == sortParams[0])
             products = CurrentSupply.Products.OrderBy(pr => pr.Color).ToList();
-        else
+        else if(param == sortParams[1])
             products = CurrentSupply.Products.OrderByDescending(pr => pr.Size).ToList();
     }
 
-    public List<int> sortParams = new List<int>() { 1, 2}; 
+    public List<string> sortParams = new List<string>() { "по размеру", "по цвету"}; 
 
     public List<Data.Models.Product> products = new List<Data.Models.Product>();
 

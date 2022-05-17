@@ -1,28 +1,23 @@
 ﻿@using Blazor.Data.Models
 @using Blazor.Services
 @inject NavigationManager _navigationManager
-<div class="conteiter-fluid mr-3">
-    <div class="row">
-        <!------------------------------ left panel   --------------------------------------------------->
+<div class="container-fluid mr-3">
+    @if (Products != null)
+    {
+        <div class="row">
+            <!-- Left panel -->
         <div class="col-2">
             <nav class="navbar my-4 mx-2 bg-my-style border rounded">
                 <!-- Left panel -->
-                <ul class="navbar-nav"
+                <ul class="navbar-nav">
+                    @foreach (var item in sortParams)
+                   {
                     <li class="nav-item mx-2 my-1">
                         <label class="btn btn-bg">
-                            <input type="radio" name="options" id="option1" checked> по дате поставки
+                            <input type="radio" name="options" id="option1" @onclick="() => Refresh(item)" checked> @item
                         </label>
                     </li>
-                    <li class="nav-item mx-2 my-1">
-                        <label class="btn btn-bg">
-                            <input type="radio" name="options" id="option2"> по поставщикам
-                        </label>
-                    </li>
-                    <li class="nav-item mx-2 my-1">
-                        <label class="btn btn-bg">
-                            <input type="radio" name="options" id="option3"> по количеству
-                        </label>
-                    </li>
+                   }
                 </ul>
             </nav>
             <nav class="navbar my-4 mx-2 bg-my-style border rounded">
@@ -57,82 +52,44 @@
                 </ul>
             </nav>
         </div>
-        <!------------------------------ main information   --------------------------------------------------->
-        @if (products != null)
-        {
-            <div class="col-8 mt-4">
-                <form class="form-row my-2text-align">
-                    <div class="col-11 form-group">
-                        <input type="text" class="form-control mr-3" id="Input" aria-describedby="emailHelp" placeholder="Что хотите найти?">
-                    </div>
-                    <div class="col-1 text-center mt-2">
-                        <button class="btn btn-bg m-2 my-sm-0" type="submit">Поиск</button>
-                    </div>
-                </form>
-                <table class="table table-my-style my-3">
-                    <thead class="thead-my-style">
-                        <tr>
-                            <th scope="col">#</th>
-                            <td class="py-2 pr-1" colspan="4">
-                                <div class="row mr-2">
-                                    <div class="col-2 px-1 my-auto">
-                                        <p class="my-auto">Товар</p>
-                                    </div>
-                                    <div class="col-2 px-1 my-auto">
-                                        <p class="my-auto">Количество на складе</p>
-                                    </div>
-                                    <div class="col-3 px-1 my-auto">
-                                        <p class="my-auto">Поставщик</p>
-                                    </div>
-                                    <div class="col-3 px-1 my-auto">
-                                        <p class="my-auto">Клиент</p>
-                                    </div>
-                                    <div class="col-2 px-1 my-auto">
-                                        <p class="my-auto">Дата поставки</p>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in products)
-                        {
-                            <tr @onclick="() => toItem(item.Id)">
-                                <th scope="row">@item.Id</th>
-                                <td class="py-2 pr-1" colspan="4">
-                                    <div class="row mr-2">
-                                        <div class="col-2 px-1 my-auto">
-                                            <p class="my-auto">@item.ProductName</p>
-                                        </div>
-                                        <div class="col-2 px-1 my-auto">
-                                            <p class="my-auto">@item.Number</p>
-                                        </div>
-                                        <div class="col-3 px-1 my-auto">
-                                            <p class="my-auto">@item.SupplierCompany</p>
-                                        </div>
-                                        <div class="col-3 px-1 my-auto">
-                                            <p class="my-auto">@item.ClientCompany</p>
-                                        </div>
-                                        <div class="col-2 px-1 my-auto">
-                                            <p class="my-auto">@item.Date</p>
-                                        </div>
-                                    </div>
-                                </td>
+            <div class="col-8 text-center">
+                <h1>Товары</h1>
+                <div class="container">
+                    <table class="table table-my-style my-3 mx-auto" id="supplies-table">
+                        <thead class="thead-my-style">
+                            <tr>
+                                <th class="py-auto" scope="row">#</th>
+                                <th class="py-auto" scope="row">Товар</th>
+                                <th class="py-auto" scope="row">Размер</th>
+                                <th class="py-auto" scope="row">Цвет</th>
+                                <th class="py-auto" scope="row">Количество</th>
+                                <th class="py-auto" scope="row">Поставщик</th>
+                                <th class="py-auto" scope="row">Клиент</th>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+                            @foreach (var product in products)
+                            {
+                                <tr>
+                                    <td class="py-auto" scope="row">@product.Id</td>
+                                    <td class="py-auto" scope="row">@product.ProductName</td>
+                                    <td class="py-auto" scope="row">@product.Size</td>
+                                    <td class="py-auto" scope="row">@product.Color</td>
+                                    <td class="py-auto" scope="row">@product.Number</td>
+                                    <td class="py-auto" scope="row">@product.SupplierCompany</td>
+                                    <td class="py-auto" scope="row">@product.ClientCompany</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
 
-                    </tbody>
-                </table>
             </div>
-        }
-        else
-        {
-            <h1>Loading...</h1>
-        }
-        <!------------------------------ right panel   --------------------------------------------------->
-        <div class="col-2">
+            <div class="col-2 text-center">
+            </div>
         </div>
-    </div>
+    }
+
 </div>
 @code {
     private List<ProductDTO>? Products;
@@ -172,6 +129,16 @@
         }
 
         products = Products.Where(pr => chosenSuppliers.Contains(pr.SupplierCompany) && chosenClients.Contains(pr.ClientCompany)).ToList();
+    }
+
+    // Сортировка
+    private List<string> sortParams = new List<string>(){"по количеству", "по дате"};
+    private async Task Refresh(string param)
+    {   
+        if(param == sortParams[0])
+            products = Products.OrderBy(pr => pr.Size).ToList();
+        else if (param == sortParams[1])
+            products = Products.OrderByDescending(pr => pr.Date).ToList();
     }
 
     //Клиенты
