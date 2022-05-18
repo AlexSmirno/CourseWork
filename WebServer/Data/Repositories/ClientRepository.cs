@@ -20,6 +20,11 @@ namespace WebServer.Data.Repositories
             return await _storageContext.Clients.Include(cl => cl.Supplies).ToListAsync();
         }
 
+        public async Task<List<string>?> GetClientNamesAsync()
+        {
+            return await _storageContext.Clients.Select(cl => cl.CompanyName).ToListAsync();
+        }
+
         public async Task<Client?> GetClientByIdAsync(int Id)
         {
             return await _storageContext.Clients.FirstOrDefaultAsync(client => client.Id == Id);

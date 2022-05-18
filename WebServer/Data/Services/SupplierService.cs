@@ -40,6 +40,11 @@ namespace WebServer.Data.Services
             return await Task.FromResult(suppliers);
         }
 
+        public async Task<List<string>> GetAllSupplierNamesAsync()
+        {
+            return await _supplierRepository.GetAllSupplierNamesAsync();
+        }
+
         public async Task<Supplier?> UpdateSupplier(SupplierDTO newSupplier)
         {
             var supplier = await _supplierRepository.GetSupplierByIdAsync(newSupplier.Id);

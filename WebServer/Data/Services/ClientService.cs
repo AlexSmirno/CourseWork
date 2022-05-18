@@ -38,6 +38,11 @@ namespace WebServer.Data.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<List<string>> GetAllClientNamesAsync()
+        {
+            return await _clientRepository.GetClientNamesAsync();
+        }
+
         public async Task<Client?> UpdateClient(ClientDTO newClient)
         {
             var client = await _clientRepository.GetClientByIdAsync(newClient.Id);

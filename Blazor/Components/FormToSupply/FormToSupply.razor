@@ -1,71 +1,65 @@
-﻿<div class="container-fluid pb-3 text-center">
+﻿@using Blazor.Data
+@using Blazor.Services
+
+<div class="container-fluid pb-3 text-center">
     <h1>Новая поставка</h1>
     <div class="container-fluid">
         <form>
             <div class="form-row justify-content-center">
-                <div class="form-group col-md-2">
+                <div class="form-group col-2">
                     <label for="inputAddress">Тип поставки</label>
-                    <select id="inputState" class="form-control">
+                    <select id="inputState" class="form-control" @bind-Value="@type" @bind-Value:event="onchange">
                         <option selected>Загрузка</option>
                         <option>Отгрузка</option>
                     </select>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-3">
                     <label for="inputCity">Поставщик</label>
                     <select id="inputState" class="form-control">
-                        <option selected>AzamatPartner</option>
-                        <option>OpenGroups</option>
+                        @foreach (var supplier in Suppliers)
+                        {
+                            <option>@supplier</option>
+                        }
                     </select>
                 </div>
-                <div class="form-group col-md-1">
+                <div class="form-group col-1">
                     <label for="inputState">День</label>
-                    <select id="inputState" class="form-control">
-                        <option selected>26</option>
-                        <option>27</option>
-                        <option>28</option>
-                        <option>29</option>
-                        <option>30</option>
-                        <option>31</option>
+                    <select id="inputState" class="form-control" @bind-Value="@userDate.Day" @bind-Value:event="onchange">
+                        <option selected>@currentDate.Day</option>
+                        @for (var i = currentDate.Day + 1; i < currentDate.AmountOfDayInMonth + 1; i++)
+                        {
+                            <option>@i</option>
+                        }
                     </select>
                 </div>
-                <div class="form-group col-md-1">
+                <div class="form-group col-1">
                     <label for="inputState">Месяц</label>
-                    <select id="inputState" class="form-control">
-                        <option>Январь</option>
-                        <option>Февраль</option>
-                        <option selected>Март</option>
-                        <option>Апрель</option>
-                        <option>Май</option>
-                        <option>Июнь</option>
-                        <option>Июль</option>
-                        <option>Август</option>
-                        <option>Сентябрь</option>
-                        <option>Окрябрь</option>
-                        <option>Ноябрь</option>
-                        <option>Декабрь</option>
+                    <select id="inputState" class="form-control" @bind-Value="@userDate.Month" @bind-Value:event="onchange">
+                        @foreach (var month in Enums.Months)
+                        {
+                            <option>@month</option>
+                        }
                     </select>
                 </div>
-                <div class="form-group col-md-1">
+                <div class="form-group col-1">
                     <label for="inputState">Год</label>
-                    <select id="inputState" class="form-control">
-                        <option selected>2022</option>
-                        <option>2023</option>
-                        <option>2024</option>
+                    <select id="inputState" class="form-control" @bind-Value="@userDate.Year" @bind-Value:event="onchange">
+                        <option selected>@currentDate.Year</option>
+                        @for (var i = currentDate.Year + 1; i < currentDate.Year + 10; i++)
+                        {
+                            <option>@i</option>
+                        }
                     </select>
                 </div>
-                <div class="form-group col-md-1">
+                <div class="form-group col-1">
                     <label for="inputZip">Время</label>
-                    <select id="inputState" class="form-control">
-                        <option selected>10:00</option>
-                        <option>10:30</option>
-                        <option>11:00</option>
-                        <option>11:30</option>
-                        <option>12:00</option>
-                        <option>12:30</option>
-                        <option>13:00</option>
-                        <option>13:30</option>
-                        <option>14:30</option>
-                        <option>15:00</option>
+                    <select id="inputState" class="form-control" @bind-Value="@Time" @bind-Value:event="onchange">
+                        @for (var i = currentDate.StartOfDay; i < currentDate.EndOfDay; i++)
+                        {
+                            <option>@i:00</option>
+                            <option>@i:30</option>
+                        }
+
                     </select>
                 </div>
             </div>
@@ -87,19 +81,26 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th>1</th>
-                    <th>AN2354QW0007</th>
-                    <th>45</th>
-                    <th>Черный</th>
-                    <th>20</th>
-                    <th>9199</th>
-                    <th>3</th>
-                    <th>Загрузка</th>
-                    <th>AzamatPartner</th>
-                    <th>26.03.2022</th>
-                    <th>15:00</th>
-                </tr>
+                @if (newSupply.Products != null)
+                {
+                    @foreach (var product in newSupply.Products)
+                    {
+                        <tr>
+                            <th>@product.Id</th>
+                            <th>@product.ProductName</th>
+                            <th>@product.Size</th>
+                            <th>@product.Color</th>
+                            <th>@product.Number</th>
+                            <th>@product.Price</th>
+                            <th>@newSupply.Division</th>
+                            <th>@newSupply.Type</th>
+                            <th>@newSupply.Supplier</th>
+                            <th>@newSupply.Date</th>
+                            <th>@newSupply.Time</th>
+                        </tr>
+                    }
+
+                }
             </tbody>
         </table>
         <button type="submit" class="btn btn-bg">Сохранить</button>
@@ -109,19 +110,18 @@
         </div>
         <div class="col-6 text-center">
             <form>
-
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="inputEmail4">Общий код товара</label>
-                        <input type="text" class="form-control" id="inputEmail4" placeholder="Код">
+                        <input type="text" class="form-control" id="inputEmail4" placeholder="Код" @bind-Value="@newProduct.ProductName" @bind-Value:event="onchange">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputPassword4">Размер</label>
-                        <input type="text" class="form-control" id="inputPassword4" placeholder="Размер">
+                        <input type="text" class="form-control" id="inputPassword4" placeholder="Размер" @bind-Value="@newProduct.Size" @bind-Value:event="onchange">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputAddress">Цвет</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="Цвет">
+                        <input type="text" class="form-control" id="inputAddress" placeholder="Цвет" @bind-Value="@newProduct.Color" @bind-Value:event="onchange">
                     </div>
 
                 </div>
@@ -129,25 +129,24 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="inputAddress2">Количество</label>
-                        <input type="text" class="form-control" id="inputAddress2" placeholder="Количество">
+                        <input type="text" class="form-control" id="inputAddress2" placeholder="Количество" @bind-Value="@newProduct.Number" @bind-Value:event="onchange">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputAddress">Цена</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="Цена">
+                        <input type="text" class="form-control" id="inputAddress" placeholder="Цена" @bind-Value="@newProduct.Price" @bind-Value:event="onchange">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputAddress2">Отдел</label>
-                        <select id="inputState" class="form-control">
+                        <select id="inputState" class="form-control" @bind-Value="@newSupply.Division" @bind-Value:event="onchange">
                             <option selected>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
+                            @for (var i = 2; i < Enums.amountOfDivisions + 1; i++)
+                            {
+                                <option>@i</option>
+                            }
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-bg">Добавить товар</button>
+                <button type="submit" class="btn btn-bg" @onclick="@AddProduct">Добавить товар</button>
             </form>
         </div>
         <div class="col-3">
@@ -155,6 +154,31 @@
     </div>
 </div>
 @code {
-    private Blazor.Data.Models.Supply newSupply { get; set; }
+    private Blazor.Data.Models.Supply newSupply = new Data.Models.Supply();
+    private List<string> Suppliers = new List<string>();
+    private List<string> Clients = new List<string>();
+    private Date currentDate = new Date();
+    private Date userDate = new Date();
+    private string type = "Загрузка";
+    private string Time;
+    private int Division;
+    private Blazor.Data.Models.Product newProduct = new Data.Models.Product();
 
+    [Inject]
+    private IClientProvider clientProvider { get; set; }
+    [Inject]
+    private ISupplierProvider supplierProvider { get; set; }
+    [Inject]
+    private ISupplyProvider supplyProvider { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Suppliers = await supplierProvider.GetAllNames();
+        Clients = await clientProvider.GetAllNames();
+    }
+
+    private void AddProduct()
+    {
+
+    }
 }

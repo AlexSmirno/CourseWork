@@ -34,6 +34,16 @@ namespace WebServer.Controllers
 
             return author;
         }
+        [HttpGet("Names")]
+        public async Task<ActionResult<List<string>>> GetAllClientNamesAsync()
+        {
+            var result = await _context.GetAllClientNamesAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return result;
+        }
 
         [HttpPut]
         public async Task<ActionResult<Client>> PutClients([FromBody] ClientDTO author)

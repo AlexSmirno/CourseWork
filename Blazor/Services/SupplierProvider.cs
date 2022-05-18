@@ -14,13 +14,17 @@ namespace Blazor.Services
 
         public async Task<List<Supplier>?> GetAll()
         {
-            return await _httpClient.GetFromJsonAsync<List<Supplier>>("https://localhost:7053/api/Supplier");
-            //return await _httpClient.GetFromJsonAsync<List<Supplier>>("/api/Supplier");
+            return await _httpClient.GetFromJsonAsync<List<Supplier>>("/api/Supplier");
+        }
+
+        public async Task<List<string>?> GetAllNames()
+        {
+            return await _httpClient.GetFromJsonAsync<List<string>>("/api/Supplier/Names");
         }
 
         public async Task<Supplier?> GetOne(int id)
         {
-            return await _httpClient.GetFromJsonAsync<Supplier>($"https://localhost:7053/api/Supplier/{id}");
+            return await _httpClient.GetFromJsonAsync<Supplier>($"/api/Supplier/{id}");
         }
 
         public async Task<bool> Add(Supplier product)

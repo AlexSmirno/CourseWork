@@ -25,7 +25,11 @@ namespace WebServer.Data.Repositories
         {
             return await _storageContext.Suppliers.Include(sup => sup.Supplies).FirstOrDefaultAsync(supplier => supplier.Id == Id);
         }
-
+        
+        public async Task<List<string>> GetAllSupplierNamesAsync()
+        {
+            return await _storageContext.Suppliers.Select(sup => sup.CompanyName).ToListAsync();
+        }
         public async Task<Supplier?> UpdateSupplierAsync(Supplier supplier)
         {
             var result = _storageContext.Update(supplier);
