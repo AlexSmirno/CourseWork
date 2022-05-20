@@ -14,7 +14,6 @@ namespace Blazor.Services
 
         public async Task<List<Supply>?> GetAll()
         {
-            //return await _httpClient.GetFromJsonAsync<List<Supply>>("https://localhost:7053/api/Supply");
             return await _httpClient.GetFromJsonAsync<List<Supply>>("/api/Supply");
         }   
 
@@ -29,6 +28,8 @@ namespace Blazor.Services
             StringContent httpContent = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
 
             var responce = await _httpClient.PostAsync("/api/Supply", httpContent);
+
+            Console.WriteLine(await responce.Content.ReadAsStringAsync());
 
             return await Task.FromResult(responce.IsSuccessStatusCode);
         }

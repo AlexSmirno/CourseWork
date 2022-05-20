@@ -17,7 +17,7 @@ namespace Blazor.Services
             return await _httpClient.GetFromJsonAsync<List<Client>>("/api/Client");
         }
 
-        public async Task<List<string>> GetAllNames()
+        public async Task<List<string>?> GetAllNames()
         {
             return await _httpClient.GetFromJsonAsync<List<string>>("/api/Client/Names");
         }

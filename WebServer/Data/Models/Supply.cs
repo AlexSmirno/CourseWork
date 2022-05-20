@@ -14,10 +14,9 @@ namespace WebServer.Data.Models
         public string Date { get; set; }
         public string Time { get; set; }
         public IEnumerable<Product>? Products { get; set; }
-        public int SupplierId { get; set; }
+        public int? SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
         public virtual Client Client { get; set; }
-
    }
 }
