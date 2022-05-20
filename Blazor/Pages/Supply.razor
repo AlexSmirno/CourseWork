@@ -15,7 +15,7 @@
                             @foreach(var item in sortParams)
                             {
                                 <label class="btn btn-bg" @onclick="() => Refresh(item)">
-                                    <input type="radio" name="question1" /> @item
+                                    <input type="radio" name="question1" checked/> @item
                                 </label>
                             }
                         </li>

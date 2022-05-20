@@ -15,10 +15,19 @@
                 </div>
                 <div class="form-group col-3">
                     <label for="inputCity">Поставщик</label>
-                    <select id="inputState" class="form-control" @bind-Value="@Supplier" @bind-Value:event="onchange">
+                    <select id="inputState" class="form-control" @bind-Value="@Supplier" @bind-Value:event="onchange"> <!-- Поставщики-->
                         @foreach (var supplier in Suppliers)
                         {
                             <option>@supplier</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-3">
+                    <label for="inputCity">Клиент</label>
+                    <select id="inputState" class="form-control" @bind-Value="@Client" @bind-Value:event="onchange"> <!-- Клиенты-->
+                        @foreach (var client in Clients)
+                        {
+                            <option>@client</option>
                         }
                     </select>
                 </div>
@@ -26,7 +35,7 @@
                     <label for="inputState">День</label>
                     <select id="inputState" class="form-control" @bind-Value="@userDate.Day" @bind-Value:event="onchange">  <!-- День поставки-->
                         <option selected>@currentDate.Day</option>
-                        @for (var i = currentDate.Day + 1; i < currentDate.AmountOfDayInMonth + 1; i++)
+                        @for (var i = 1; i < currentDate.AmountOfDayInMonth + 1; i++)
                         {
                             <option>@i</option>
                         }
@@ -141,7 +150,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputAddress2">Отдел</label> <!-- Отдел -->
-                        <select id="inputState" class="form-control" @bind-Value="@newSupply.Division" @bind-Value:event="onchange">
+                        <select id="inputState" class="form-control" @bind-Value="@Division" @bind-Value:event="onchange">
                             <option selected>1</option>
                             @for (var i = 2; i < Enums.amountOfDivisions + 1; i++)
                             {
@@ -175,15 +184,16 @@
     private List<string> Suppliers = new List<string>();
     private List<string> Clients = new List<string>();
     private List<int> productList = new List<int>();
-    public List<Blazor.Data.Models.Product> productsInSupply = new List<Data.Models.Product>();
+    private List<Blazor.Data.Models.Product> productsInSupply = new List<Data.Models.Product>();
+    private Blazor.Data.Models.Product newProduct = new Data.Models.Product();
     private Date currentDate = new Date();
     private Date userDate = new Date();
     private string type = "Загрузка";
     private string Time;
     private string Supplier;
-    private int Division;
+    private string Client;
+    private int Division = 1;
     private int productId;
-    private Blazor.Data.Models.Product newProduct = new Data.Models.Product();
 
     [Inject]
     private IClientProvider clientProvider { get; set; }
@@ -208,9 +218,13 @@
         productsInSupply.Add(newProduct);
     }
 
-    private void AddProduct(int id)
+    private async void AddProduct(int id)
     {
-
+        if (!productsInSupply.Select(pr => pr.Id).Contains(id) && id > 0)
+        {
+            var product = await productProvider.GetOne(id);
+            productsInSupply.Add(product);
+        }
     }
 
     private async void Save()
@@ -218,15 +232,20 @@
         newSupply.Products = productsInSupply;
         Blazor.Data.Models.Supplier supFromInput = new Data.Models.Supplier() {CompanyName = Supplier};
         newSupply.Supplier = supFromInput;
-        Blazor.Data.Models.Client clientFromInput = new Data.Models.Client() {CompanyName = Clients[0]};
+        Blazor.Data.Models.Client clientFromInput = new Data.Models.Client() { CompanyName = Client };
         newSupply.Client = clientFromInput;
         newSupply.Date = userDate.Year + "." + userDate.Month + "." + userDate.Day;
         newSupply.Time = Time;
         newSupply.Type = type;
         newSupply.Division = Division.ToString();
-        if (!(await supplyProvider.Add(newSupply)))
+
+        try
         {
-            
+            await supplyProvider.Add(newSupply);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
         }
     }
 }

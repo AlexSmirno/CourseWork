@@ -24,6 +24,15 @@
                  <div class="field">
                     <label class="label">Количество</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Number" aria-label="Disabled input example" disabled readonly>
                  </div>
+                 <div class="field">
+                    <label class="label">Цена</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Price" aria-label="Disabled input example" disabled readonly>
+                 </div>
+                 <div class="field">
+                    <label class="label">Поставка</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Supply" aria-label="Disabled input example" disabled readonly>
+                 </div>
+                 <div class="field">
+                    <label class="label">Количество</label> <input class="form-control valueField" type="text" value="@CurrentProduct.Number" aria-label="Disabled input example" disabled readonly>
+                 </div>
                </div>
            </div>
        </div>
@@ -32,14 +41,12 @@
 @code {
     [Parameter]
     public string ProductId { get; set; }
-    public List<Data.Models.Product> Products { get; set; }
     public Data.Models.Product? CurrentProduct { get; set; }
     [Inject]
     private IProductProvider productProvider { get; set; }
     protected async override Task OnInitializedAsync()
     {
         CurrentProduct = await productProvider.GetOne(Int32.Parse(ProductId));
-        Products = await productProvider.GetAll();
         Console.WriteLine(CurrentProduct);
         base.OnInitialized();
     }
