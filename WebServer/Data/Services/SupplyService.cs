@@ -14,7 +14,7 @@ namespace WebServer.Data.Services
             _supplyRepository = supplyRepository;
         }
 
-        public async Task<Supply?> AddSupply(Supply supply) // Разные добавления для IN и OUT
+        public async Task<Supply?> AddSupply(Supply supply)
         {
             Supply newSupply = new Supply()
             {
@@ -26,8 +26,6 @@ namespace WebServer.Data.Services
 
             if (supply.Products.Any())
             {
-                //int[] productsId = supply.Products.Select(prod => prod.Id).ToArray(); - для OUT
-
                 newSupply.Products = supply.Products;
             }
 
@@ -43,6 +41,38 @@ namespace WebServer.Data.Services
 
             var result = await _supplyRepository.AddSupplyAsync(newSupply);
             return await Task.FromResult(result);
+        }
+
+        public async Task<bool> AddSupplyOut(SupplyOUTDTO supply)
+        {
+
+            Supply lastSupply = await _supplyRepository.GetSupplyByIdAsync(supply.SupplyINId);
+            if (lastSupply == null) { return false; }
+
+            Supply newSupply = new Supply()
+            {
+                Division = supply.Division,
+                Type = supply.Type,
+                Time = supply.Time,
+                Date = supply.Date,
+                Client = lastSupply.Client,
+                Supplier = lastSupply.Supplier,
+                Products = lastSupply.Products
+            };
+
+            if (newSupply.Products == null)
+            {
+                return true;
+            }
+            List<Product> products = await _supplyRepository.GetProductsAsync(newSupply.Products.Select(pr => pr.Id).ToArray());
+
+            for (int i = 0; i < products.Count; i++)
+            {
+                products[i].IsDeleted = true;
+                await _supplyRepository.ChangeExistProducts(products[i]);
+            }
+
+            return true;
         }
 
         public async Task<Supply?> GetSupply(int Id)

@@ -73,6 +73,18 @@ namespace WebServer.Controllers
             return Ok(result);
         }
 
+        [HttpPost("out")]
+        public async Task<ActionResult<bool>> PostSupplyOut([FromBody] SupplyOUTDTO supply)
+        {
+            var result = await _context.AddSupplyOut(supply);
+
+            if (result == false)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSupply(int id)
         {

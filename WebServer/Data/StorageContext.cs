@@ -9,7 +9,7 @@ namespace WebServer.Data
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseNpgsql(@"Host=localhost;Database=test;Username=postgres;Password=admin")
+            optionsBuilder.UseNpgsql(@"Host=localhost;Database=Storage;Username=postgres;Password=admin")
                 .UseSnakeCaseNamingConvention()
                 .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole())).EnableSensitiveDataLogging();
         }

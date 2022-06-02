@@ -9,6 +9,7 @@ namespace WebServer.Data.Repositories
 
         public SupplyRepository(StorageContext storageContext) => _storageContext = storageContext;
 
+        #region addSupply
         public async Task<Supply?> AddSupplyAsync(Supply supply)
         {
             var result = _storageContext.Supplies.Add(supply);
@@ -23,11 +24,25 @@ namespace WebServer.Data.Repositories
         {
             return await _storageContext.Suppliers.FirstOrDefaultAsync(s => s.CompanyName == companyName);
         }
-
         public async Task<Client?> GetClientAsync(string companyName)
         {
             return await _storageContext.Clients.FirstOrDefaultAsync(cl => cl.CompanyName == companyName);
         }
+
+        public async Task<bool> ChangeExistProducts(Product product)
+        {
+            var result = _storageContext.Products.Update(product);
+            _storageContext.Entry(product).State = EntityState.Modified;
+            await _storageContext.SaveChangesAsync();
+            if (result != null)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+        #endregion
 
         public async Task<List<Supply>?> GetAllSuppliesAsync()
         {

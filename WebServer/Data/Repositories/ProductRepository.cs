@@ -20,7 +20,8 @@ namespace WebServer.Data.Repositories
         }
         public async Task<List<Product>?> GetAllProductAsync()
         {
-            var result = await _storageContext.Products.Include(prod => prod.Supply).ToListAsync();
+            var result = await _storageContext.Products.Where(pr => pr.IsDeleted == false)
+                                                        .Include(prod => prod.Supply).ToListAsync();
 
             if (result != null)
             {
@@ -33,7 +34,7 @@ namespace WebServer.Data.Repositories
 
         public async Task<Product?> GetProductByIdAsync(int Id)
         {
-            var result = await _storageContext.Products.Include(pr => pr.Supply).FirstOrDefaultAsync(product => product.Id == Id);
+            var result = await _storageContext.Products.Where(pr => pr.IsDeleted == false).Include(pr => pr.Supply).FirstOrDefaultAsync(product => product.Id == Id);
            
             return await Task.FromResult(result);
         }

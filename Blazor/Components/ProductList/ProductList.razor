@@ -65,6 +65,7 @@
                                 <th class="py-auto" scope="row">Количество</th>
                                 <th class="py-auto" scope="row">Поставщик</th>
                                 <th class="py-auto" scope="row">Клиент</th>
+                                <th class="py-auto" scope="row">Дата поставки</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,6 +79,7 @@
                                     <td class="py-auto" scope="row">@product.Number</td>
                                     <td class="py-auto" scope="row">@product.SupplierCompany</td>
                                     <td class="py-auto" scope="row">@product.ClientCompany</td>
+                                    <td class="py-auto" scope="row">@product.Date</td>
                                 </tr>
                             }
                         </tbody>
@@ -138,7 +140,7 @@
         if(param == sortParams[0])
             products = Products.OrderBy(pr => pr.Size).ToList();
         else if (param == sortParams[1])
-            products = Products.OrderByDescending(pr => pr.Date).ToList();
+            products = Products.OrderBy(pr => pr.Date).ToList();
     }
 
     //Клиенты

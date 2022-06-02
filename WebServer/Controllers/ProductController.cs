@@ -30,7 +30,7 @@ namespace WebServer.Controllers
 
             if (product == null)
             {
-                return NotFound();
+                return new Product();
             }
 
             return product;

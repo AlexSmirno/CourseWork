@@ -18,7 +18,6 @@ namespace WebServer.Data.Services
                 Number = product.Number,
                 Brand = product.Brand,
                 Color = product.Color,
-                Date = product.Date,
                 Price = product.Price,
                 Size = product.Size,
                 //SupplyId = product.Supply
@@ -39,7 +38,6 @@ namespace WebServer.Data.Services
                     Size = product.Size,
                     Brand = product.Brand,
                     Color = product.Color,
-                    Date = product.Date,
                     Number = product.Number,
                     Price = product.Price,
                     ProductName = product.ProductName,
@@ -72,7 +70,6 @@ namespace WebServer.Data.Services
                         Size = item.Size,
                         Brand = item.Brand,
                         Color = item.Color,
-                        Date = item.Date,
                         Number = item.Number,
                         Price = item.Price,
                         ProductName = item.ProductName,
@@ -109,7 +106,6 @@ namespace WebServer.Data.Services
                 product.ProductName = newProduct.ProductName;
                 product.Brand = newProduct.Brand;
                 product.Price = newProduct.Price;
-                product.Date = newProduct.Date;
                 product.Size = newProduct.Size;
                 product.Color = newProduct.Color;
                 product.Number = newProduct.Number;

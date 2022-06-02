@@ -12,10 +12,11 @@ namespace WebServer.Data.Models
         public string ProductName { get; set; }
         public string Brand { get; set; }
         public string Price { get; set; }
-        public string? Date { get; set; }
         public string Size { get; set; }
         public string Color { get; set; }
         public int Number { get; set; }
+        [Column(TypeName = "boolean")]
+        public bool IsDeleted { get; set; }
         public int SupplyId { get; set; }
         public virtual Supply? Supply { get; set; }
     }
