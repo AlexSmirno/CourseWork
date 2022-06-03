@@ -1,0 +1,277 @@
+﻿@using Blazor.Data
+@using Blazor.Services
+
+<div class="container-fluid pb-3 text-center">
+    <h1>Новая поставка</h1>
+    <div class="container-fluid">
+        <form>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <label for="inputAddress">Тип поставки</label>
+                    <select id="inputState" class="form-control" @bind-Value="@type" @bind-Value:event="onchange">
+                        <!-- Тип поставки-->
+                        <option selected>Загрузка</option>
+                        <option>Отгрузка</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label for="inputCity">Поставщики</label>
+                    <select id="inputState" class="form-control" @bind-Value="@Supplier" @bind-Value:event="onchange">
+                        <!-- Поставщики-->
+                        @foreach (var supplier in Suppliers)
+                        {
+                            <option>@supplier</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label for="inputCity">Клиенты  </label>
+                    <select id="inputState" class="form-control" @bind-Value="@Client" @bind-Value:event="onchange">
+                        <!-- Клиенты-->
+                        @foreach (var client in Clients)
+                        {
+                            <option>@client</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-1">
+                    <label for="inputState">День</label>
+                    <select id="inputState" class="form-control" @bind-Value="@userDate.Day" @bind-Value:event="onchange">
+                        <!-- День поставки-->
+                        @for (var i = 1; i < currentDate.AmountOfDayInMonth + 1; i++)
+                        {
+                            if (i == currentDate.Day)
+                            {
+                                <option selected>@i</option>
+                            }
+                            else
+                            {
+                                <option>@i</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-1">
+                    <label for="inputState">Месяц</label>
+                    <select id="inputState" class="form-control" @bind-Value="@userDate.Month" @bind-Value:event="onchange">
+                        <!-- Месяц поставки-->
+                        @foreach (var month in Enums.Months)
+                        {
+                            <option>@month</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-1">
+                    <label for="inputState">Год</label>
+                    <select id="inputState" class="form-control" @bind-Value="@userDate.Year" @bind-Value:event="onchange">
+                        <!-- Год поставки-->
+                        <option selected>@currentDate.Year</option>
+                        @for (var i = currentDate.Year + 1; i < currentDate.Year + 10; i++)
+                        {
+                            <option>@i</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-1">
+                    <label for="inputZip">Время</label>
+                    <select id="inputState" class="form-control" @bind-Value="@Time" @bind-Value:event="onchange">
+                        <!-- Время поставки-->
+                        @for (var i = currentDate.StartOfDay; i < currentDate.EndOfDay; i++)
+                        {
+                            <option>@i:00</option>
+                            <option>@i:30</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+        </form>
+        <table class="table table-my-style my-3 mx-auto">
+            <thead class="thead-my-style">
+                <tr>
+                    <th class="py-auto" scope="row">#</th>
+                    <th class="py-auto" scope="row">Товар</th>
+                    <th class="py-auto" scope="row">Размер</th>
+                    <th class="py-auto" scope="row">Цвет</th>
+                    <th class="py-auto" scope="row">Количество</th>
+                    <th class="py-auto" scope="row">Цена</th>
+                    <th class="py-auto" scope="row">Отдел</th>
+                    <th class="py-auto" scope="row">Тип</th>
+                    <th class="py-auto" scope="row">Поставщик</th>
+                    <th class="py-auto" scope="row">Дата</th>
+                    <th class="py-auto" scope="row">Время</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (productsInSupply != null)
+                {
+                    @foreach (var product in productsInSupply)
+                    {
+                        <tr>
+                            <th>@product.Id</th>
+                            <th>@product.ProductName</th>
+                            <th>@product.Size</th>
+                            <th>@product.Color</th>
+                            <th>@product.Number</th>
+                            <th>@product.Price</th>
+                            <th>@Division</th>
+                            <th>@type</th>
+                            <th>@Supplier</th>
+                            <th>@userDate.Year @userDate.Month @userDate.Day</th>
+                            <th>@Time</th>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-bg" @onclick="@Save">Сохранить</button>
+    </div>
+    @if (type == "Загрузка")
+    {
+        <div class="row mt-4">
+            <div class="col-3">
+            </div>
+            <div class="col-6 text-center">
+                <form>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="inputEmail4">Название товара</label>  <!-- Название продукта-->
+                        <input type="text" class="form-control" id="inputEmail4" placeholder="Название" @bind-Value="@newProduct.ProductName" @bind-Value:event="onchange">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="inputPassword4">Размер</label>  <!-- Размер продукта-->
+                        <input type="text" class="form-control" id="inputPassword4" placeholder="Размер" @bind-Value="@newProduct.Size" @bind-Value:event="onchange">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="inputAddress">Цвет</label> <!-- Цвет продукта-->
+                        <input type="text" class="form-control" id="inputAddress" placeholder="Цвет" @bind-Value="@newProduct.Color" @bind-Value:event="onchange">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="inputAddress">Бренд</label> <!-- Бренд продукта-->
+                        <input type="text" class="form-control" id="inputAddress" placeholder="Бренд" @bind-Value="@newProduct.Brand" @bind-Value:event="onchange">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class=" col-md-4">
+                            <label for="inputAddress2">Количество</label> <!-- Количество продуктов-->
+                        <input type="number" class="form-control" id="inputAddress2" placeholder="Количество" @bind-Value="@newProduct.Number" @bind-Value:event="onchange">
+                        </div>
+                        <div class=" col-md-4">
+                            <label for="inputAddress">Цена</label> <!-- Размер продукта-->
+                        <input type="text" class="form-control" id="inputAddress" placeholder="Цена" @bind-Value="@newProduct.Price" @bind-Value:event="onchange">
+                        </div>
+                        <div class=" col-md-4">
+                            <label for="inputAddress2">Отдел</label> <!-- Отдел -->
+                        <select id="inputState" class="form-control" @bind-Value="@Division" @bind-Value:event="onchange">
+                                <option selected>1</option>
+                                @for (var i = 2; i < Enums.amountOfDivisions + 1; i++)
+                                {
+                                    <option>@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-bg my-2" @onclick="() => AddProduct(newProduct)">Добавить товар</button>
+                </form>
+            </div>
+            <div class="col-3">
+            </div>
+        </div>
+    }
+    else
+    {
+        <form>
+            <div class="col-2">
+                <lable>Добавить продукт</lable>
+                <input type="number" class="form-control" @bind-Value="@productId" @bind-Value:event="onchange" />
+            </div>
+            <div>
+                <button type="button" class="btn btn-bg" @onclick="() => AddProduct(productId)">Добавить товар</button>
+            </div>
+        </form>
+    }
+</div>
+@code {
+    private Blazor.Data.Models.Supply newSupply = new Data.Models.Supply();
+    private List<string> Suppliers = new List<string>();
+    private List<string> Clients = new List<string>();
+    private List<int> productList = new List<int>();
+    private List<Blazor.Data.Models.Product> productsInSupply = new List<Data.Models.Product>();
+    private Blazor.Data.Models.Product newProduct = new Data.Models.Product();
+    private Date currentDate = new Date();
+    private Date userDate = new Date();
+    private string type = "Загрузка";
+    private string Mode = "Добавить";
+    private string Time;
+    private string Supplier;
+    private string Client;
+    private int Division = 1;
+    private int productId;
+
+    [Inject]
+    private IClientProvider clientProvider { get; set; }
+    [Inject]
+    private ISupplierProvider supplierProvider { get; set; }
+    [Inject]
+    private ISupplyProvider supplyProvider { get; set; }
+    [Inject]
+    private IProductProvider productProvider { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Suppliers = await supplierProvider.GetAllNames();
+        Clients = await clientProvider.GetAllNames();
+        Time = currentDate.Hour + 1 + ":00";
+        Supplier = Suppliers[0];
+    }
+
+    private void AddProduct(Blazor.Data.Models.Product productToAdd)
+    {
+        productToAdd.Id = productsInSupply.Count;
+        productToAdd.SupplyId = 1;
+        productsInSupply.Add(productToAdd);
+        newProduct = new Blazor.Data.Models.Product() { 
+            ProductName = productToAdd.ProductName,
+            Brand = productToAdd.Brand,
+            Color = productToAdd.Color,
+            Number = productToAdd.Number,
+            Size = productToAdd.Size,
+            Price = productToAdd.Price
+        };
+    }
+
+    private async Task AddProduct(int id)
+    {
+        if (!productsInSupply.Select(pr => pr.Id).Contains(id) && id > 0)
+        {
+            var product = await productProvider.GetOne(id);
+            if (product.Id > 0)
+            {
+                productsInSupply.Add(product);
+            }
+        }
+    }
+
+    private async void Save()
+    {
+        newSupply.Products = productsInSupply;
+        Blazor.Data.Models.Supplier supFromInput = new Data.Models.Supplier() { CompanyName = Supplier };
+        newSupply.Supplier = supFromInput;
+        Blazor.Data.Models.Client clientFromInput = new Data.Models.Client() { CompanyName = Client };
+        newSupply.Client = clientFromInput;
+        newSupply.Date = userDate.Year + "." + userDate.Month + "." + userDate.Day;
+        newSupply.Time = Time;
+        newSupply.Type = type;
+        newSupply.Division = Division.ToString();
+        
+        try
+        {
+            await supplyProvider.Add(newSupply);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

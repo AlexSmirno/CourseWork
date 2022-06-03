@@ -1,0 +1,167 @@
+﻿@using Blazor.Data.Models
+@using Blazor.Services
+@inject NavigationManager _navigationManager
+<div class="container-fluid mr-3">
+    @if (Products != null)
+    {
+        <div class="row">
+            <!-- Left panel -->
+        <div class="col-2">
+            <nav class="navbar my-4 mx-2 bg-my-style border rounded">
+                <!-- Left panel -->
+                <ul class="navbar-nav">
+                    @foreach (var item in sortParams)
+                   {
+                    <li class="nav-item mx-2 my-1">
+                        <label class="btn btn-bg">
+                            <input type="radio" name="options" id="option1" @onclick="() => Refresh(item)" checked> @item
+                        </label>
+                    </li>
+                   }
+                </ul>
+            </nav>
+            <nav class="navbar my-4 mx-2 bg-my-style border rounded">
+                <h4 class="mx-auto">Поставщики</h4>
+                <!-- Links -->
+                <ul class="navbar-nav">
+                    @foreach (var item in Products.Select(pr => pr.SupplierCompany).Distinct().ToList())
+                    {
+                        <li class="nav-item mx-2 my-1">
+                            <label class="btn btn-bg">
+                                <input type="checkbox" name="options" id="option1"
+                                   @onchange="eventArgs => {CheckboxSupplierClicked(item, eventArgs.Value);}" checked> <text>@item</text>
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </nav>
+
+            <nav class="navbar my-4 mx-2 bg-my-style border rounded">
+                <h4 class="mx-auto">Клиенты</h4>
+                <!-- Links -->
+                <ul class="navbar-nav">
+                    @foreach (var item in Products.Select(pr => pr.ClientCompany).Distinct().ToList())
+                    {
+                        <li class="nav-item mx-2 my-1">
+                            <label class="btn btn-bg">
+                                <input type="checkbox" name="options" id="option1"
+                                   @onchange="eventArgs => {CheckboxClientClicked(item, eventArgs.Value);}" checked> <text>@item</text>
+                            </label>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+            <div class="col-8 text-center">
+                <h1>Товары</h1>
+                <div class="container">
+                    <table class="table table-my-style my-3 mx-auto" id="supplies-table">
+                        <thead class="thead-my-style">
+                            <tr>
+                                <th class="py-auto" scope="row">#</th>
+                                <th class="py-auto" scope="row">Товар</th>
+                                <th class="py-auto" scope="row">Размер</th>
+                                <th class="py-auto" scope="row">Цвет</th>
+                                <th class="py-auto" scope="row">Количество</th>
+                                <th class="py-auto" scope="row">Поставщик</th>
+                                <th class="py-auto" scope="row">Клиент</th>
+                                <th class="py-auto" scope="row">Дата поставки</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in products)
+                            {
+                                <tr>
+                                    <td class="py-auto" scope="row">@product.Id</td>
+                                    <td class="py-auto" scope="row">@product.ProductName</td>
+                                    <td class="py-auto" scope="row">@product.Size</td>
+                                    <td class="py-auto" scope="row">@product.Color</td>
+                                    <td class="py-auto" scope="row">@product.Number</td>
+                                    <td class="py-auto" scope="row">@product.SupplierCompany</td>
+                                    <td class="py-auto" scope="row">@product.ClientCompany</td>
+                                    <td class="py-auto" scope="row">@product.Date</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="col-2 text-center">
+            </div>
+        </div>
+    }
+
+</div>
+@code {
+    private List<ProductDTO>? Products;
+    [Inject]
+    private IProductProvider productProvider { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Products = await productProvider.GetAllDTO();
+        products = Products;
+        chosenClients = Products.Select(pr => pr.ClientCompany).Distinct().ToList();
+        chosenSuppliers = Products.Select(pr => pr.SupplierCompany).Distinct().ToList();
+    }
+    public void toItem(int productId)
+    {
+        _navigationManager.NavigateTo($"/Product/{productId}");
+    }
+
+    private List<ProductDTO> products = new List<ProductDTO>();
+
+    //Поставщики
+    private List<string> chosenSuppliers = new List<string>();
+    void CheckboxSupplierClicked(string supplier, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!chosenSuppliers.Contains(supplier))
+            {
+                chosenSuppliers.Add(supplier);
+            }
+        }
+        else
+        {
+            if (chosenSuppliers.Contains(supplier))
+            {
+                chosenSuppliers.Remove(supplier);
+            }
+        }
+
+        products = Products.Where(pr => chosenSuppliers.Contains(pr.SupplierCompany) && chosenClients.Contains(pr.ClientCompany)).ToList();
+    }
+
+    // Сортировка
+    private List<string> sortParams = new List<string>(){"по количеству", "по дате"};
+    private async Task Refresh(string param)
+    {   
+        if(param == sortParams[0])
+            products = Products.OrderBy(pr => pr.Size).ToList();
+        else if (param == sortParams[1])
+            products = Products.OrderBy(pr => pr.Date).ToList();
+    }
+
+    //Клиенты
+    private List<string> chosenClients = new List<string>();
+    void CheckboxClientClicked(string client, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!chosenClients.Contains(client))
+            {
+                chosenClients.Add(client);
+            }
+        }
+        else
+        {
+            if (chosenClients.Contains(client))
+            {
+                chosenClients.Remove(client);
+            }
+        }
+
+        products = Products.Where(pr => chosenClients.Contains(pr.ClientCompany) && chosenSuppliers.Contains(pr.SupplierCompany)).ToList();
+    }
+}
