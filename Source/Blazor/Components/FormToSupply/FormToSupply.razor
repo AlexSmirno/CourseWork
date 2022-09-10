@@ -193,12 +193,15 @@
     }
 </div>
 @code {
-    private Blazor.Data.Models.Supply newSupply = new Data.Models.Supply();
+    private Blazor.Data.Models.SupplyINDTO newSupplyIN = new Data.Models.SupplyINDTO();
+    private Blazor.Data.Models.SupplyOutDTO newSupplyOUT = new Data.Models.SupplyOutDTO();
+    private List<Blazor.Data.Models.ProductDTO> productsInSupply = new List<Data.Models.ProductDTO>();
+    private Blazor.Data.Models.ProductDTO newProduct = new Data.Models.ProductDTO();
+
     private List<string> Suppliers = new List<string>();
     private List<string> Clients = new List<string>();
     private List<int> productList = new List<int>();
-    private List<Blazor.Data.Models.Product> productsInSupply = new List<Data.Models.Product>();
-    private Blazor.Data.Models.Product newProduct = new Data.Models.Product();
+
     private Date currentDate = new Date();
     private Date userDate = new Date();
     private string type = "Загрузка";
@@ -226,12 +229,15 @@
         Supplier = Suppliers[0];
     }
 
-    private void AddProduct(Blazor.Data.Models.Product productToAdd)
+
+    //add product in
+    private void AddProduct(Blazor.Data.Models.ProductDTO productToAdd)
     {
         productToAdd.Id = productsInSupply.Count;
         productToAdd.SupplyId = 1;
         productsInSupply.Add(productToAdd);
-        newProduct = new Blazor.Data.Models.Product() { 
+
+        newProduct = new Blazor.Data.Models.ProductDTO() { 
             ProductName = productToAdd.ProductName,
             Brand = productToAdd.Brand,
             Color = productToAdd.Color,
@@ -241,6 +247,7 @@
         };
     }
 
+    //is going to remake it  /  add product in
     private async Task AddProduct(int id)
     {
         if (!productsInSupply.Select(pr => pr.Id).Contains(id) && id > 0)
@@ -248,26 +255,24 @@
             var product = await productProvider.GetOne(id);
             if (product.Id > 0)
             {
-                productsInSupply.Add(product);
+                //productsInSupply.Add(product);
             }
         }
     }
 
     private async void Save()
     {
-        newSupply.Products = productsInSupply;
-        Blazor.Data.Models.Supplier supFromInput = new Data.Models.Supplier() { CompanyName = Supplier };
-        newSupply.Supplier = supFromInput;
-        Blazor.Data.Models.Client clientFromInput = new Data.Models.Client() { CompanyName = Client };
-        newSupply.Client = clientFromInput;
-        newSupply.Date = userDate.Year + "." + userDate.Month + "." + userDate.Day;
-        newSupply.Time = Time;
-        newSupply.Type = type;
-        newSupply.Division = Division.ToString();
+        newSupplyIN.Products = productsInSupply;
+        newSupplyIN.Supplier = Supplier;
+        newSupplyIN.Client = Client;
+        newSupplyIN.Date = userDate.Year + "." + userDate.Month + "." + userDate.Day;
+        newSupplyIN.Time = Time;
+        newSupplyIN.Type = type;
+        newSupplyIN.Division = Division.ToString();
         
         try
         {
-            await supplyProvider.Add(newSupply);
+            await supplyProvider.Add(newSupplyIN);
         }
         catch (Exception ex)
         {

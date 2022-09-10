@@ -14,7 +14,16 @@ namespace Blazor.Services
 
         public async Task<List<Supply>?> GetAll()
         {
-            return await _httpClient.GetFromJsonAsync<List<Supply>>("/api/Supply");
+            try
+            {
+                var result = await _httpClient.GetFromJsonAsync<List<Supply>>("/api/Supply");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + " | " + ex.InnerException);
+                return null;
+            }
         }   
 
         public async Task<Supply?> GetOne(int id)
@@ -22,12 +31,24 @@ namespace Blazor.Services
             return await _httpClient.GetFromJsonAsync<Supply>($"/api/Supply/{id}");
         }
 
-        public async Task<bool> Add(Supply product)
+        public async Task<bool> Add(SupplyINDTO supply)
         {
-            string data = JsonConvert.SerializeObject(product);
+            string data = JsonConvert.SerializeObject(supply);
             StringContent httpContent = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
 
-            var responce = await _httpClient.PostAsync("/api/Supply", httpContent);
+            var responce = await _httpClient.PostAsync("/api/Supply/in", httpContent);
+
+            Console.WriteLine(await responce.Content.ReadAsStringAsync());
+
+            return await Task.FromResult(responce.IsSuccessStatusCode);
+        }
+
+        public async Task<bool> Add(SupplyOutDTO supply)
+        {
+            string data = JsonConvert.SerializeObject(supply);
+            StringContent httpContent = new StringContent(data, System.Text.Encoding.UTF8, "application/json");
+
+            var responce = await _httpClient.PostAsync("/api/Supply/out", httpContent);
 
             Console.WriteLine(await responce.Content.ReadAsStringAsync());
 

@@ -18,16 +18,19 @@ namespace WebServer.Data.Repositories
             await _storageContext.SaveChangesAsync();
             return await Task.FromResult(result.Entity);
         }
+
         public async Task<List<Product>?> GetAllProductAsync()
         {
             var result = await _storageContext.Products.Where(pr => pr.IsDeleted == false)
                                                         .Include(prod => prod.Supply).ToListAsync();
 
-            if (result != null)
+            if (result.Count == 0)
             {
-                result.ForEach(el => el.Supply =
-                        _storageContext.Supplies.Include(sup => sup.Supplier).Include(sup => sup.Client).FirstOrDefault());
+                return await Task.FromResult(result);
             }
+
+            result.ForEach(el => el.Supply =
+                    _storageContext.Supplies.Include(sup => sup.Supplier).Include(sup => sup.Client).FirstOrDefault());
 
             return await Task.FromResult(result);
         }

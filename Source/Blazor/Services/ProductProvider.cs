@@ -20,7 +20,15 @@ namespace Blazor.Services
 
         public async Task<List<ProductDTO>> GetAllDTO()
         {
-            return await _httpClient.GetFromJsonAsync<List<ProductDTO>>("/api/Product/DTO");
+            try
+            {
+                return await _httpClient.GetFromJsonAsync<List<ProductDTO>>("/api/Product/DTO");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
         
         public async Task<Product?> GetOne(int id)

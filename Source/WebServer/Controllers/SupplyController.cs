@@ -19,7 +19,12 @@ namespace WebServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Supply>>> GetSupplys()
         {
-            return await _context.GetSupplies();
+            var result = await _context.GetSupplies();
+            if (result.Count > 0)
+            {
+                return result;
+            }
+            return null;
         }
 
         [HttpGet("{id}")]
@@ -34,7 +39,7 @@ namespace WebServer.Controllers
 
             return supply;
         }
-            
+
         [HttpGet("DTO/{id}")]
         public async Task<ActionResult<List<SupplyDTO>>> GetAllSupplyDTO()
         {
@@ -61,22 +66,22 @@ namespace WebServer.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Supply>> PostSupply([FromBody] Supply supply)
-        {
-            var result = await _context.AddSupply(supply);
-
-            if (result == null)
-            {
-                return BadRequest();
-            }
-            return Ok(result);
-        }
-
         [HttpPost("out")]
         public async Task<ActionResult<bool>> PostSupplyOut([FromBody] SupplyOUTDTO supply)
         {
             var result = await _context.AddSupplyOut(supply);
+
+            if (result == false)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [HttpPost("in")]
+        public async Task<ActionResult<SupplyINDTO>> PostSupplyIn([FromBody] SupplyINDTO supply)
+        {
+            var result = await _context.AddSupplyIn(supply);
 
             if (result == false)
             {

@@ -10,6 +10,7 @@ namespace WebServer.Data.Services
         private ProductRepository _productRepository;
 
         public ProductService(ProductRepository productRepository) => _productRepository = productRepository;
+
         public async Task<Product?> AddProduct(ProductDTO product)
         {
             Product newProduct = new Product()

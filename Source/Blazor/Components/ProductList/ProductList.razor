@@ -100,9 +100,12 @@
     protected override async Task OnInitializedAsync()
     {
         Products = await productProvider.GetAllDTO();
+        if (Products != null && Products.Any())
+        {
         products = Products;
         chosenClients = Products.Select(pr => pr.ClientCompany).Distinct().ToList();
         chosenSuppliers = Products.Select(pr => pr.SupplierCompany).Distinct().ToList();
+        }
     }
     public void toItem(int productId)
     {

@@ -20,18 +20,20 @@ namespace WebServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.GetProducts();
+            var result = await _context.GetProducts();
+
+            if (result.Count > 0)
+            {
+                return result;
+            }
+
+            return null;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.GetProduct(id);
-
-            if (product == null)
-            {
-                return new Product();
-            }
 
             return product;
         }
@@ -53,11 +55,6 @@ namespace WebServer.Controllers
         public async Task<ActionResult<List<ProductDTO>>> GetAllProductDTO()
         {
             var product = await _context.GetAllProductDTO();
-
-            if (product == null)
-            {
-                return NotFound();
-            }
 
             return product;
         }

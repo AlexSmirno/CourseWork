@@ -70,7 +70,10 @@
 	protected override async Task OnInitializedAsync()
 	{
 		supplies = await supplyProvider.GetAll();
-		supplies.OrderBy(sup => sup.Date);
+		if (supplies != null && supplies.Any())
+		{
+			supplies.OrderBy(sup => sup.Date);
+		}
 	}
 
 	public void toItem(Supply supply)
