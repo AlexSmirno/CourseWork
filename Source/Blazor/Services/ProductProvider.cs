@@ -1,5 +1,4 @@
 ﻿using Blazor.Data.Models;
-using Blazor.Services;
 using System.Net.Http.Json;
 using Newtonsoft.Json;
 
@@ -55,6 +54,7 @@ namespace Blazor.Services
             Product? editProduct = JsonConvert.DeserializeObject<Product>(responce.Content.ReadAsStringAsync().Result);
             return await Task.FromResult(editProduct);
         }
+
         public async Task<bool> Remove(int id)
         {
             var delete = await _httpClient.DeleteAsync($"/api/Product/{id}");

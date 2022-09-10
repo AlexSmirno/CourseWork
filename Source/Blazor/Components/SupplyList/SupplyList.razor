@@ -72,7 +72,7 @@
 		supplies = await supplyProvider.GetAll();
 		if (supplies != null && supplies.Any())
 		{
-			supplies.OrderBy(sup => sup.Date);
+			supplies.Where(sup => sup.Type == "Загрузить").OrderBy(sup => sup.Date);
 		}
 	}
 
