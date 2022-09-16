@@ -69,7 +69,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var product in products)
+                            @foreach (var product in Products)
                             {
                                 <tr>
                                     <td class="py-auto" scope="row">@product.Id</td>
@@ -99,12 +99,12 @@
     private IProductProvider productProvider { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Products = await productProvider.GetAllDTO();
+        GetProducts();
+
         if (Products != null && Products.Any())
         {
-        products = Products;
-        chosenClients = Products.Select(pr => pr.ClientCompany).Distinct().ToList();
-        chosenSuppliers = Products.Select(pr => pr.SupplierCompany).Distinct().ToList();
+            chosenClients = Products.Select(pr => pr.ClientCompany).Distinct().ToList();
+            chosenSuppliers = Products.Select(pr => pr.SupplierCompany).Distinct().ToList();
         }
     }
     public void toItem(int productId)
@@ -112,7 +112,10 @@
         _navigationManager.NavigateTo($"/Product/{productId}");
     }
 
-    private List<ProductDTO> products = new List<ProductDTO>();
+    private async void GetProducts()
+    {
+        Products = await productProvider.GetAllDTO();
+    }
 
     //Поставщики
     private List<string> chosenSuppliers = new List<string>();
@@ -133,17 +136,7 @@
             }
         }
 
-        products = Products.Where(pr => chosenSuppliers.Contains(pr.SupplierCompany) && chosenClients.Contains(pr.ClientCompany)).ToList();
-    }
-
-    // Сортировка
-    private List<string> sortParams = new List<string>(){"по количеству", "по дате"};
-    private async Task Refresh(string param)
-    {   
-        if(param == sortParams[0])
-            products = Products.OrderBy(pr => pr.Size).ToList();
-        else if (param == sortParams[1])
-            products = Products.OrderBy(pr => pr.Date).ToList();
+        Products = Products.Where(pr => chosenSuppliers.Contains(pr.SupplierCompany) && chosenClients.Contains(pr.ClientCompany)).ToList();
     }
 
     //Клиенты
@@ -165,6 +158,18 @@
             }
         }
 
-        products = Products.Where(pr => chosenClients.Contains(pr.ClientCompany) && chosenSuppliers.Contains(pr.SupplierCompany)).ToList();
+        Products = Products.Where(pr => chosenClients.Contains(pr.ClientCompany) && chosenSuppliers.Contains(pr.SupplierCompany)).ToList();
     }
+
+
+    // Сортировка
+    private List<string> sortParams = new List<string>(){"по количеству", "по дате"};
+    private async Task Refresh(string param)
+    {   
+        if(param == sortParams[0])
+            Products = Products.OrderBy(pr => pr.Size).ToList();
+        else if (param == sortParams[1])
+            Products = Products.OrderBy(pr => pr.Date).ToList();
+    }
+
 }

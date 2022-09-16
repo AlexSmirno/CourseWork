@@ -24,7 +24,7 @@ namespace Blazor.Services
                 Console.WriteLine(ex.Message + " | " + ex.InnerException);
                 return null;
             }
-        }   
+        }
 
         public async Task<Supply?> GetOne(int id)
         {

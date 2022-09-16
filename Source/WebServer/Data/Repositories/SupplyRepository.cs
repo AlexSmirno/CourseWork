@@ -47,17 +47,17 @@ namespace WebServer.Data.Repositories
         public async Task<List<Supply>?> GetAllSuppliesAsync()
         {
             return await _storageContext.Supplies.Include(supply => supply.Supplier)
-                                                        .Include(supply => supply.Products)
-                                                        .Include(supply => supply.Client)
-                                                        .ToListAsync();
+                                                 .Include(supply => supply.Products)
+                                                 .Include(supply => supply.Client)
+                                                 .ToListAsync();
         }
 
         public async Task<Supply?> GetSupplyByIdAsync(int Id)
         {
             return await _storageContext.Supplies.Include(supply => supply.Supplier)
-                                                        .Include(supply => supply.Products)
-                                                        .Include(supply => supply.Client)
-                                                        .FirstOrDefaultAsync(supply => supply.Id == Id);
+                                                 .Include(supply => supply.Products)
+                                                 .Include(supply => supply.Client)
+                                                 .FirstOrDefaultAsync(supply => supply.Id == Id);
         }
 
         public async Task<Supply?> UpdateSupplyAsync(Supply supply)

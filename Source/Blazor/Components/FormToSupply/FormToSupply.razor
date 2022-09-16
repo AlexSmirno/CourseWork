@@ -55,9 +55,16 @@
                     <label for="inputState">Месяц</label>
                     <select id="inputState" class="form-control" @bind-Value="@userDate.Month" @bind-Value:event="onchange">
                         <!-- Месяц поставки-->
-                        @foreach (var month in Enums.Months)
+                        @for (int i = 0; i < Enums.Months.Count; i++)
                         {
-                            <option>@month</option>
+                            if (i == currentDate.Month - 1)
+                            {
+                                <option selected>@Enums.Months[i]</option>
+                            }
+                            else
+                            {
+                                <option>@Enums.Months[i]</option>
+                            }
                         }
                     </select>
                 </div>

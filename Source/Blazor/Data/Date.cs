@@ -10,6 +10,7 @@
         public int Minute { get; set; }
         public readonly int EndOfDay = 21;
         public readonly int StartOfDay = 9;
+
         public Date()
         {
             Year = DateTime.Now.Year;
